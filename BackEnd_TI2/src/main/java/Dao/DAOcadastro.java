@@ -11,6 +11,16 @@ public class DAOcadastro {
 	private Connection conexao;
 	
 	public int getMaxId() {
+		try {
+			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = st.executeQuery("SELECT COALESCE(MAX(id_cadastro),0) as maxId from cadastro");	
+			rs.next();
+			maxId = rs.getInt(1);	
+			st.close();
+		}
+		catch(SQLException u) {
+			System.out.println("ERRO -> "+u.getMessage() );
+		}
 		return maxId;
 	}
 
@@ -32,11 +42,11 @@ public class DAOcadastro {
 			Class.forName(driverName);
 			conexao = DriverManager.getConnection(url, username, password);
 			status = (conexao == null);
-			System.out.println("Conex„o efetuada com o postgres!");
+			System.out.println("Conex√£o efetuada com o postgres!");
 		} catch (ClassNotFoundException e) { 
-			System.err.println("Conex„o N„O efetuada com o postgres -- Driver n„o encontrado -- " + e.getMessage());
+			System.err.println("Conex√£o N√£O efetuada com o postgres -- Driver n√£o encontrado -- " + e.getMessage());
 		} catch (SQLException e) {
-			System.err.println("Conex„o N„O efetuada com o postgres -- " + e.getMessage());
+			System.err.println("Conex√£o N√£O efetuada com o postgres -- " + e.getMessage());
 		}
 
 		return status;
@@ -64,7 +74,7 @@ public class DAOcadastro {
 					       + c.getSenha() + "', '"+c.getTipo()+ "');");
 			st.close();
 		} catch (SQLException u) {  
-			throw new RuntimeException(u);
+			throw new RuntimeException("Erro add cadastro" + u);
 		}
 	}
 
