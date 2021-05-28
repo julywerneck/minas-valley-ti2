@@ -18,8 +18,9 @@ public class Aplicacao {
 	
     public static void main(String[] args) {
         port(6789);
-
-        post("/cadastro", (request, response) -> cadService.add(request, response));
+        
+        post("/cadastroUsuario", (request, response) -> cadService.add(request, response ,true));
+        post("/cadastroEmpresa", (request, response) -> cadService.add(request, response ,false));
         get("/cadastro/:id", (request, response) -> cadService.get(request, response));
         get("/cadastro/update/:id", (request, response) -> cadService.update(request, response));
         get("/cadastro/delete/:id", (request, response) -> cadService.remove(request, response));
