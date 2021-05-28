@@ -10,7 +10,7 @@ import spark.Response;
 public class cadastroService {
 
 	private DAOcadastro cadastroDAO;
-
+	
 	public cadastroService() {
 		try {
 			cadastroDAO = new DAOcadastro();
@@ -20,18 +20,19 @@ public class cadastroService {
 		}
 	}
 
-	public Object add(Request request, Response response) {
+	public Object add(Request request, Response response, boolean isUsuario) {
 		int id_cadastro = cadastroDAO.getMaxId() + 1;
 		String login = request.queryParams("login");
-		String senha = request.queryParams("senha");
-		String tipo = request.queryParams("tipo");
-
+		String senha = MD5.toMD5(request.queryParams("senha"));
+		String tipo = (isUsuario) ? "profissional" : "empresa";
+		
 		cadastro c = new cadastro(id_cadastro, login, senha, tipo);
 
 		cadastroDAO.add(c);
 
 		response.status(201); // 201 Created
-		return id_cadastro;
+		//response.redirect("login.html");
+		return "OK";
 	}
 
 	public Object get(Request request, Response response) {
@@ -51,7 +52,7 @@ public class cadastroService {
             		"</cadastro>\n";
         } else {
             response.status(404); // 404 Not found
-            return "Cadastro " + id_cadastro + " n„o encontrado.";
+            return "Cadastro " + id_cadastro + " n√£o encontrado.";
         }
 
 	}
@@ -71,7 +72,7 @@ public class cadastroService {
             return id_cadastro;
         } else {
             response.status(404); // 404 Not found
-            return "Cadastro" + id_cadastro + " n„o encontrado.";
+            return "Cadastro" + id_cadastro + " n√£o encontrado.";
         }
 
 	}
@@ -89,7 +90,7 @@ public class cadastroService {
         	return id_cadastro;
         } else {
             response.status(404); // 404 Not found
-            return "Cadastro" + id_cadastro + " n„o encontrado.";
+            return "Cadastro" + id_cadastro + " n√£o encontrado.";
         }
 	}
 
